@@ -51,12 +51,18 @@ if(NOT BUILD_SHARED_LIBS)
 endif()
 
 option(PLUTOSVG_ENABLE_FREETYPE "Enable Freetype integration" OFF)
-if(PLUTOSVG_ENABLE_FREETYPE)
+if (PLUTOSVG_ENABLE_FREETYPE)
     find_package(Freetype 2.12 REQUIRED)
     target_compile_definitions(plutosvg PUBLIC PLUTOSVG_HAS_FREETYPE)
-    target_include_directories(plutosvg PUBLIC ${FREETYPE_INCLUDE_DIRS})
-    target_link_libraries(plutosvg PRIVATE ${FREETYPE_LIBRARIES})
-endif()
+
+    # Check if freetype was installed with vcpkg
+    if (VCPKG_TARGET_TRIPLET AND freetype_DIR MATCHES "vcpkg")
+        target_link_libraries(plutosvg PRIVATE Freetype::Freetype)
+    else ()
+        target_include_directories(plutosvg PUBLIC ${FREETYPE_INCLUDE_DIRS})
+        target_link_libraries(plutosvg PRIVATE ${FREETYPE_LIBRARIES})
+    endif ()
+endif ()
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
