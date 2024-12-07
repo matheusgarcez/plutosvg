@@ -56,7 +56,7 @@ if (PLUTOSVG_ENABLE_FREETYPE)
     target_compile_definitions(plutosvg PUBLIC PLUTOSVG_HAS_FREETYPE)
 
     # Check if freetype was installed with vcpkg
-    if (VCPKG_TARGET_TRIPLET AND freetype_DIR MATCHES "vcpkg")
+    if (PLUTOSVG_LINK_VCPKG)
         target_link_libraries(plutosvg PRIVATE Freetype::Freetype)
     else ()
         target_include_directories(plutosvg PUBLIC ${FREETYPE_INCLUDE_DIRS})
